@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import sklearn
 import keras
-import tensorflow as tf
 from tensorflow import keras
 from pylab import rcParams
 from matplotlib import rc
@@ -25,10 +24,11 @@ data.head()
 
 data.shape
 
+# Show summary statistics of dataset
 data.describe()
 
 # Knowing The Data
-#Correlation heatmap
+# Correlation heatmap
 corr = data.corr()
 plt.figure(figsize=(12, 10))
 
