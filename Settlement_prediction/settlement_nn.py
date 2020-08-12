@@ -2,6 +2,7 @@
 """"
 Original file is located at
     https://colab.research.google.com/drive/1TC-D7WGN1DDvzNasHM3-iVs51GTamBJS
+Created by Peter D. Ogunjinmi; KNU, 2020
 """
 
 # Import necessary libraries
@@ -15,11 +16,10 @@ import tensorflow as tf
 from tensorflow import keras
 from pylab import rcParams
 from matplotlib import rc
-# %matplotlib inline
+%matplotlib inline
 rcParams['figure.figsize'] = 10, 5
 
 #Load dataset
-
 data = pd.read_csv('Numerical_settlement_Pohang_Wkshop.csv', header=0)
 data.head()
 
@@ -32,8 +32,8 @@ data.describe()
 corr = data.corr()
 plt.figure(figsize=(12, 10))
 
-sns.heatmap(corr,xticklabels=True,yticklabels=True,annot = True,cmap ='coolwarm', square=True)///
-sns.heatmap(corr,xticklabels=True,yticklabels=True,annot = True,cmap ='coolwarm', square=True)
+sns.heatmap(corr[(corr >= 0.0) | (corr <= -0.0)],  vmax=1.0, vmin=-1.0, linewidths=0.1,
+            xticklabels=True, yticklabels=True, annot = True, annot_kws={"size": 8}, cmap = 'coolwarm', square=True)
 plt.title("Correlation Between Variables")
 plt.savefig('2.png')
 
@@ -72,7 +72,6 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras import backend
 
-
 #Defining Root Mean Square Error As our Metric Function 
 def rmse(y_true, y_pred):
     return backend.sqrt(backend.mean(backend.square(y_pred - y_true), axis=-1))
@@ -88,7 +87,6 @@ model.add(Dense(8,input_dim=3, kernel_initializer='glorot_normal', activation = 
 
 # Output Layer
 model.add(Dense(1, name="dense_output", activation='linear'))
-# model.add(Dense(1, kernel_initializer='normal', name="dense_output", use_bias=True, activation='linear'))
 
 #Optimize , Compile And Train The Model 
 from keras import optimizers
@@ -115,7 +113,6 @@ from sklearn.metrics import r2_score
 print(r2_score(y_test,y_predict))
 print(mean_absolute_error(y_test,y_predict))
 
-
 # Plotting Loss And Root Mean Square Error For both Training And Test Sets
 plt.plot(history.history['rmse'])
 plt.plot(history.history['val_rmse'])
@@ -140,12 +137,11 @@ plt.suptitle('Scatter of predicitons on test data', fontsize=20)
 plt.xlabel('True value', fontsize=18)
 plt.ylabel('Predicted value', fontsize=16)
 plt.scatter(y_test, y_predict)
-
 plt.show()
 
 # Write to csv format
-# data['Settlement'] = pd.Series(y_predict.reshape(1, -1)[0])
-# predicted_data = pd.concat([data['Settlement']])
-# predicted_data.to_csv('predicted_Norm_data.csv', index=False)
+data['Settlement'] = pd.Series(y_predict.reshape(1, -1)[0])
+predicted_data = pd.concat([data['Settlement']])
+predicted_data.to_csv('predicted_Norm_data.csv', index=False)
 
 
